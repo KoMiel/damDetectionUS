@@ -204,13 +204,12 @@ def multiplot_heatmap(tab):
                 # create array to store results for different thresholds
                 thr_tab = np.zeros(thresholds.shape[2])
                 # loop over thresholds
-                for thr_num, threshold in enumerate(thresholds[tr_num, c_num]):
+                for thr_num, threshold in enumerate(thresholds[tr_num, 0]):
                     # filter results table
                     res_tab = results_summary[results_summary[:,0] == tr_num,:]
                     res_tab = res_tab[res_tab[:,1] == te_num,:]
                     res_tab = res_tab[res_tab[:,2] == thr_num,:]
                     res_tab = res_tab[res_tab[:,3] == r_num,:]
-                    res_tab = res_tab[res_tab[:,4] == c_num,:]
                     # calculate mean F score of cross validation folds
                     thr_tab[thr_num] = np.mean(res_tab[:,10])
 
@@ -228,21 +227,24 @@ def multiplot_heatmap(tab):
         axs[r_num].set_xticks([])
         axs[r_num].set_yticks([])
         axs[r_num].text(0.4, -0.3, 'All dams', ha='center', fontsize = 14)
-        axs[r_num].text(1.4, -0.3, '> 15m', ha='center', fontsize = 14)
-        axs[r_num].text(2.4, -0.3, '10-15m', ha='center', fontsize = 14)
-        axs[r_num].text(3.4, -0.3, '5-10m', ha='center', fontsize = 14)
-        axs[r_num].text(4.4, -0.3, '< 5m', ha='center', fontsize = 14)
+        axs[r_num].text(1.4, -0.3, '$\geq$15m', ha='center', fontsize = 14)
+        axs[r_num].text(2.4, -0.3, '10-<15m', ha='center', fontsize = 14)
+        axs[r_num].text(3.4, -0.3, '5-<10m', ha='center', fontsize = 14)
+        axs[r_num].text(4.4, -0.3, '<5m', ha='center', fontsize = 14)
     axs[0].text(-0.3, 0.4, 'All dams', va='center', rotation=90, fontsize = 14)
-    axs[0].text(-0.3, 1.4, '> 15m', va='center', rotation=90, fontsize = 14)
-    axs[0].text(-0.3, 2.4, '10-15m', va='center', rotation=90, fontsize = 14)
+    axs[0].text(-0.3, 1.4, '$\geq$15m', va='center', rotation=90, fontsize = 14)
+    axs[0].text(-0.3, 2.4, '10-<15m', va='center', rotation=90, fontsize = 14)
     axs[0].text(-0.6, 2.4, 'Evaluated on', va='center', rotation=90, fontsize = 16)
-    axs[0].text(-0.3, 3.4, '5-10m', va='center', rotation=90, fontsize = 14)
-    axs[0].text(-0.3, 4.4, '< 5m', va='center', rotation=90, fontsize = 14)
-    axs[0].text(2.4, -0.6, '(a)/Trained on', ha='center', fontsize = 16)
-    axs[1].text(2.4, -0.6, '(b)/Trained on', ha='center', fontsize = 16)
-    axs[2].text(2.4, -0.6, '(c)/Trained on', ha='center', fontsize = 16)
-    cbar_ax = fig.add_axes([0.05, 0.93, 0.9, 0.05])
-    cbar = fig.colorbar(heatmap, cax=cbar_ax, orientation="horizontal")
+    axs[0].text(-0.3, 3.4, '5-<10m', va='center', rotation=90, fontsize = 14)
+    axs[0].text(-0.3, 4.4, '<5m', va='center', rotation=90, fontsize = 14)
+    axs[0].text(2.4, -0.6, 'Trained on', ha='center', fontsize = 16)
+    axs[1].text(2.4, -0.6, 'Trained on', ha='center', fontsize = 16)
+    axs[2].text(2.4, -0.6, 'Trained on', ha='center', fontsize = 16)
+    axs[0].text(2.4, 5.3, '(a)', ha='center', fontsize = 35)
+    axs[1].text(2.4, 5.3, '(b)', ha='center', fontsize = 35)
+    axs[2].text(2.4, 5.3, '(c)', ha='center', fontsize = 35)
+    cbar_ax = fig.add_axes([0.02, 0.05, 0.02, 0.9])
+    cbar = fig.colorbar(heatmap, cax=cbar_ax, orientation="vertical")
     font_size = 20 # Adjust as appropriate.
     cbar.ax.tick_params(labelsize=font_size)
     
@@ -452,10 +454,10 @@ def precision_recall_multi(data, cut_training, cut_training_names, cut_resolutio
     fig.text(0.5, 0.04, 'Recall', ha='center')
     fig.text(0.04, 0.5, 'Precision', va='center', rotation=90)
     fig.text(0.92, 0.82, 'All dams', va='center', rotation=270)
-    fig.text(0.92, 0.66, '> 15m', va='center', rotation=270)
-    fig.text(0.92, 0.5, '10-15m', va='center', rotation=270)
-    fig.text(0.92, 0.34, '5-10m', va='center', rotation=270)
-    fig.text(0.92, 0.18, '< 5m', va='center', rotation=270)
+    fig.text(0.92, 0.66, '$\geq$15m', va='center', rotation=270)
+    fig.text(0.92, 0.5, '10-<15m', va='center', rotation=270)
+    fig.text(0.92, 0.34, '5-<10m', va='center', rotation=270)
+    fig.text(0.92, 0.18, '<5m', va='center', rotation=270)
     fig.text(0.95, 0.5, 'Trained on', va='center', rotation=270)
     fig.text(0.23, 0.9, '280m', ha='center')
     fig.text(0.075, 0.95, 'Evaluated on', ha='center')
@@ -629,21 +631,21 @@ multiplot_heatmap(tab)
 multiplot_map(tab)
 
 # create multiplot    
-precision_recall_multi(results_summary, [0,1, 2, 3, 4], ['>15m', '10-15m', '5-10m', '<5m', 'All'], [0,1,2], ['280m', '1120m', '4480m'], [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/multi.pdf')
+precision_recall_multi(results_summary, [0,1, 2, 3, 4], ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], [0,1,2], ['280m', '1120m', '4480m'], [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/multi.pdf')
     
 # create single precision recall curves
-precision_recall_single(results_summary, 0, 0, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/large_280m.pdf')
-precision_recall_single(results_summary, 0, 1, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/large_1120m.pdf')
-precision_recall_single(results_summary, 0, 2, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/large_4480m.pdf')
-precision_recall_single(results_summary, 1, 0, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/medium_280m.pdf')
-precision_recall_single(results_summary, 1, 1, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/medium_1120m.pdf')
-precision_recall_single(results_summary, 1, 2, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/medium_4480m.pdf')
-precision_recall_single(results_summary, 2, 0, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/small_280m.pdf')
-precision_recall_single(results_summary, 2, 1, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/small_1120m.pdf')
-precision_recall_single(results_summary, 2, 2, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/small_4480m.pdf')
-precision_recall_single(results_summary, 3, 0, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/verysmall_280m.pdf')
-precision_recall_single(results_summary, 3, 1, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/verysmall_1120m.pdf')
-precision_recall_single(results_summary, 3, 2, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/verysmall_4480m.pdf')
-precision_recall_single(results_summary, 4, 0, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/all_280m.pdf')
-precision_recall_single(results_summary, 4, 1, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/all_1120m.pdf')
-precision_recall_single(results_summary, 4, 2, [2,3,4,5,6], names_cut3 = ['>15m', '10m-15m', '5m-10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/all_4480m.pdf')
+precision_recall_single(results_summary, 0, 0, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/large_280m.pdf')
+precision_recall_single(results_summary, 0, 1, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/large_1120m.pdf')
+precision_recall_single(results_summary, 0, 2, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/large_4480m.pdf')
+precision_recall_single(results_summary, 1, 0, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/medium_280m.pdf')
+precision_recall_single(results_summary, 1, 1, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/medium_1120m.pdf')
+precision_recall_single(results_summary, 1, 2, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/medium_4480m.pdf')
+precision_recall_single(results_summary, 2, 0, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/small_280m.pdf')
+precision_recall_single(results_summary, 2, 1, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/small_1120m.pdf')
+precision_recall_single(results_summary, 2, 2, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/small_4480m.pdf')
+precision_recall_single(results_summary, 3, 0, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/verysmall_280m.pdf')
+precision_recall_single(results_summary, 3, 1, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/verysmall_1120m.pdf')
+precision_recall_single(results_summary, 3, 2, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/verysmall_4480m.pdf')
+precision_recall_single(results_summary, 4, 0, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/all_280m.pdf')
+precision_recall_single(results_summary, 4, 1, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/all_1120m.pdf')
+precision_recall_single(results_summary, 4, 2, [2,3,4,5,6], names_cut3 = ['$\geq$15m', '10-<15m', '5-<10m', '<5m', 'All'], colors_cut3 = ['blue', 'red', 'green', 'yellow', 'purple'], filename = 'plots/all_4480m.pdf')
